@@ -27,7 +27,7 @@ model Chat {
   id           Int      @id @default(autoincrement())
   subject      String?
   createdDate  DateTime  @default(now())
-  messages     Message[] // One-to-many: Chat → Messages
+  // messages     Message[] // One-to-many: Chat → Messages
   user         User      @relation(fields: [userId], references: [id])
   userId       Int
 }
@@ -36,7 +36,7 @@ model Message {
   id        Int      @id @default(autoincrement())
   content   String
   sentAt    DateTime @default(now())
-  chat      Chat     @relation(fields: [chatId], references: [id])
-  chatId    Int
+  // chat      Chat     @relation(fields: [chatId], references: [id])
+  // chatId    Int
 }
 
