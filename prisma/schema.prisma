@@ -20,7 +20,8 @@ model User {
   lastname  String
   email     String   @unique
   password  String
-  chats     Chat[]   // One-to-many: User → Chats
+  chatAsA  Chat[]   @relation("UserAChat")
+  chatAsB  Chat[]   @relation("UserBChat")
   messages  Message[]
 }
 
@@ -29,8 +30,11 @@ model Chat {
   subject      String?
   createdDate  DateTime  @default(now())
   messages     Message[] // One-to-many: Chat → Messages
-  user         User      @relation(fields: [userId], references: [id])
-  userId       Int
+  userA   User  @relation("UserAChat", fields: [userAId], references: [id])
+  userAId Int
+
+  userB   User  @relation("UserBChat", fields: [userBId], references: [id])
+  userBId Int
 }
 
 model Message {

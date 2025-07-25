@@ -14,17 +14,5 @@ export class CreateUserDto {
   @IsString()
   password: string;
 
-  @Optional()
-  @IsArray()
-  @ArrayNotEmpty()
-  @IsInt({ each: true })
-  chats: number[];
-
-  @Optional()
-  @IsArray()
-  @ArrayNotEmpty()
-  @IsInt({ each: true })
-  messages: number[]
-
 }
 
