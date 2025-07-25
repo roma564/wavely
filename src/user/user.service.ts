@@ -13,6 +13,7 @@ export class UserService {
           lastname: dto.lastname,
           email: dto.email,
           password: dto.password
+          //TODO hashing
       }
     });
   }

@@ -1,4 +1,5 @@
-import { IsString, IsEmail } from 'class-validator';
+import { Optional } from '@nestjs/common';
+import { IsString, IsEmail, IsInt, ArrayNotEmpty, IsArray } from 'class-validator';
 
 export class CreateUserDto {
   @IsString()
@@ -12,5 +13,18 @@ export class CreateUserDto {
 
   @IsString()
   password: string;
+
+  @Optional()
+  @IsArray()
+  @ArrayNotEmpty()
+  @IsInt({ each: true })
+  chats: number[];
+
+  @Optional()
+  @IsArray()
+  @ArrayNotEmpty()
+  @IsInt({ each: true })
+  messages: number[]
+
 }
 
