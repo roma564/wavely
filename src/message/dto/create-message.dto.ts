@@ -4,3 +4,4 @@ export class CreateMessageDto {
   @IsString()
   content: string;
 }
+

@@ -2,14 +2,14 @@ import { WebSocketGateway, SubscribeMessage, MessageBody } from '@nestjs/websock
 import { MessageService } from './message.service';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { UpdateMessageDto } from './dto/update-message.dto';
-import { UsePipes, ValidationPipe } from '@nestjs/common';
+
 
 @WebSocketGateway()
 export class MessageGateway {
   constructor(private readonly messageService: MessageService) {}
 
   @SubscribeMessage('createMessage')
-  // @UsePipes(new ValidationPipe())
+  
   create(@MessageBody() createMessageDto: CreateMessageDto) {
     console.log('createMessage')
     return this.messageService.create(createMessageDto);
