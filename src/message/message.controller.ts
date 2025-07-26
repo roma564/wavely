@@ -22,6 +22,11 @@ export class MessageController {
     return this.messageService.findOne(+id);
   }
 
+  @Get('allBy-chatId/:id')
+  findAllByChat(@Param('id') id: string) {
+    return this.messageService.findAllByChat(+id);
+  }
+
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateMessageDto: UpdateMessageDto) {
     return this.messageService.update(+id, updateMessageDto);
