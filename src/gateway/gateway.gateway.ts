@@ -3,19 +3,20 @@ import { GatewayService } from './gateway.service';
 import { CreateGatewayDto } from './dto/create-gateway.dto';
 import { UpdateGatewayDto } from './dto/update-gateway.dto';
 import { ChatService } from 'src/chat/chat.service';
-import { CreateChatDto } from 'src/chat/dto/create-chat.dto';
-import { json } from 'stream/consumers';
+
+import { MessageService } from 'src/message/message.service';
 
 
 @WebSocketGateway()
 export class Gateway {
   constructor(private readonly gatewayService: GatewayService,
     private chatService: ChatService,
+    private messageService: MessageService
     
   ) {}
 
   @SubscribeMessage('createChat')
-  create(@MessageBody() data: string) {
+  createChat(@MessageBody() data: string) {
     try {
             const jsonData = JSON.parse(data);
             // Now you can work with the jsonData object
@@ -27,6 +28,22 @@ export class Gateway {
         }
 
   }
+
+  @SubscribeMessage('createMessage')
+  createMessage(@MessageBody() data: string) {
+    try {
+            const jsonData = JSON.parse(data);
+            // Now you can work with the jsonData object
+            console.log(jsonData);
+            return this.messageService.create(jsonData);
+        } catch (e) {
+            console.error("Failed to parse JSON:", e);
+            
+        }
+        // TODO check valid user in char (if 1 2 , 3 - cannot be))
+
+  }
+
 
   @SubscribeMessage('findAllGateway')
   findAll() {

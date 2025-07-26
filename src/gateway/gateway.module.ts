@@ -4,8 +4,9 @@ import { Gateway } from './gateway.gateway';
 import { ChatService } from 'src/chat/chat.service';
 import { PrismaService } from 'src/prisma.service';
 import { ChatController } from 'src/chat/chat.controller';
+import { MessageService } from 'src/message/message.service';
 
 @Module({
-  providers: [Gateway, GatewayService, ChatService, PrismaService],
+  providers: [Gateway, GatewayService, ChatService, PrismaService, MessageService],
 })
 export class GatewayModule {}
