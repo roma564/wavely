@@ -1,10 +1,11 @@
-import { WebSocketGateway, SubscribeMessage, MessageBody } from '@nestjs/websockets';
+import { WebSocketGateway, SubscribeMessage, MessageBody, WebSocketServer } from '@nestjs/websockets';
 import { GatewayService } from './gateway.service';
 import { CreateGatewayDto } from './dto/create-gateway.dto';
 import { UpdateGatewayDto } from './dto/update-gateway.dto';
 import { ChatService } from 'src/chat/chat.service';
 
 import { MessageService } from 'src/message/message.service';
+import { Server } from 'socket.io';
 
 
 @WebSocketGateway()
@@ -15,13 +16,20 @@ export class Gateway {
     
   ) {}
 
+   @WebSocketServer()
+    server: Server
+
   @SubscribeMessage('createChat')
   createChat(@MessageBody() data: string) {
     try {
             const jsonData = JSON.parse(data);
             // Now you can work with the jsonData object
             console.log(jsonData);
+           
+
             return this.chatService.create(jsonData);
+
+            
         } catch (e) {
             console.error("Failed to parse JSON:", e);
             
@@ -35,6 +43,9 @@ export class Gateway {
             const jsonData = JSON.parse(data);
             // Now you can work with the jsonData object
             console.log(jsonData);
+             this.server.emit(jsonData.chatId, {
+            msg: jsonData.content,
+            })
             return this.messageService.create(jsonData);
         } catch (e) {
             console.error("Failed to parse JSON:", e);
