@@ -37,6 +37,17 @@ export class MessageService {
     });
   }
 
+  findLast(chatId: number) {
+    return this.prisma.message.findFirst({
+      where: {
+        chatId: 2,
+      },
+      orderBy: {
+        id: 'desc',
+      },
+    });
+  }
+
   update(id: number, dto: UpdateMessageDto) {
     return this.prisma.message.update({
       where:{id},
