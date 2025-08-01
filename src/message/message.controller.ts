@@ -17,7 +17,7 @@ export class MessageController {
     return this.messageService.findAll();
   }
 
-  @Get(':id')
+  @Get('by-Id:id')
   findOne(@Param('id') id: string) {
     return this.messageService.findOne(+id);
   }
@@ -30,6 +30,11 @@ export class MessageController {
   @Get('lastBy-chatId/:id')
   findLast(@Param('id') id: string) {
     return this.messageService.findLast(+id);
+  }
+
+  @Get('allLast')
+  findAllLast() {
+    return this.messageService.findAllLast();
   }
 
   @Patch(':id')
