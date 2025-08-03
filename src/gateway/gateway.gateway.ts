@@ -49,25 +49,38 @@ export class Gateway {
 
   }
 
+
   @SubscribeMessage('createMessage')
-  createMessage(@MessageBody() data: string) {
-    try {
-            const jsonData = JSON.parse(data);
-            // Now you can work with the jsonData object
-            console.log(jsonData);
-             this.server.emit(jsonData.chatId, {
-              id: jsonData.id,
-              content: jsonData.content,
-              chatId: jsonData.chatId,
-              userId: jsonData.userId,
-            
-            })
-            return this.messageService.create(jsonData);
-        } catch (e) {
-            console.error("Failed to parse JSON:", e);
-            
+  async createMessage(@MessageBody() data: string) {
+        try {
+        const parsed = typeof data === 'string' ? JSON.parse(data) : data;
+
+
+        await this.messageService.create(parsed);
+
+
+        const value = await this.messageService.findLast(parsed.chatId);
+        if (!value) {
+          throw new Error('Message not found.');
         }
-        // TODO check valid user in char (if 1 2 , 3 - cannot be))
+
+      
+      this.server.emit(parsed.chatId, {
+        id: value.id,
+        content: value.content,
+        chatId: value.chatId,
+        userId: value.userId,
+      });
+
+      console.log('Parsed:', parsed);
+      return value;
+    
+  } catch (e) {
+    console.error('Failed to parse or process message:', e);
+    throw e;
+  }
+
+          // TODO check valid user in char (if 1 2 , 3 - cannot be))
 
   }
 
