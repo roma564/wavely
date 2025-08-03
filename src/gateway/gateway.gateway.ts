@@ -8,7 +8,11 @@ import { MessageService } from 'src/message/message.service';
 import { Server } from 'socket.io';
 
 
-@WebSocketGateway()
+@WebSocketGateway({
+    cors: {
+        origin: ['http://localhost:3000']
+    }
+})
 export class Gateway {
   constructor(private readonly gatewayService: GatewayService,
     private chatService: ChatService,
@@ -18,6 +22,8 @@ export class Gateway {
 
    @WebSocketServer()
     server: Server
+
+
 
   @SubscribeMessage('createChat')
   createChat(@MessageBody() data: string) {
