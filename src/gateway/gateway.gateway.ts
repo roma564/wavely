@@ -7,6 +7,12 @@ import { ChatService } from 'src/chat/chat.service';
 import { MessageService } from 'src/message/message.service';
 import { Server } from 'socket.io';
 
+type Message = {  
+  id:number,
+  content: string;
+  chatId: number;
+  userId: number;
+}
 
 @WebSocketGateway({
     cors: {
@@ -50,7 +56,11 @@ export class Gateway {
             // Now you can work with the jsonData object
             console.log(jsonData);
              this.server.emit(jsonData.chatId, {
-            msg: jsonData.content,
+              id: jsonData.id,
+              content: jsonData.content,
+              chatId: jsonData.chatId,
+              userId: jsonData.userId,
+            
             })
             return this.messageService.create(jsonData);
         } catch (e) {
