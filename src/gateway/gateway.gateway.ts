@@ -56,24 +56,21 @@ export class Gateway {
         const parsed = typeof data === 'string' ? JSON.parse(data) : data;
 
 
-        await this.messageService.create(parsed);
+         this.messageService.create(parsed);
 
 
-        const value = await this.messageService.findLast(parsed.chatId);
-        if (!value) {
-          throw new Error('Message not found.');
-        }
+
+         this.server.emit(String(parsed.chatId), {
+              id: new Date(),
+              content: parsed.content,
+              chatId: parsed.chatId,
+              userId: parsed.userId,
+            });
 
       
-      this.server.emit(parsed.chatId, {
-        id: value.id,
-        content: value.content,
-        chatId: value.chatId,
-        userId: value.userId,
-      });
-
+     
       console.log('Parsed:', parsed);
-      return value;
+
     
   } catch (e) {
     console.error('Failed to parse or process message:', e);
