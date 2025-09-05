@@ -17,10 +17,10 @@ export class MessageController {
     return this.messageService.findAll();
   }
 
-  @Get('by-Id:id')
-  findOne(@Param('id') id: string) {
-    return this.messageService.findOne(+id);
-  }
+  // @Get('by-Id:id')
+  // findOne(@Param('id') id: string) {
+  //   return this.messageService.findOne(+id);
+  // }
 
   @Get('allBy-chatId/:id')
   findAllByChat(@Param('id') id: string) {

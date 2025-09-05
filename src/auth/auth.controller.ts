@@ -16,7 +16,16 @@ export class AuthController {
 
     @UseGuards(GoogleOAuth2Guard)
     @Get('callback')
-    async callbackGoogle(@Req() req, @Res() res: Response) {
+    async callbackGoogle(@Req() req, @Res({ passthrough: true }) res: Response, ) {
+      
+      const user = req.user;
+
+      res.cookie('username', user.name);
+      res.cookie('lastname', user.lastname);
+      res.cookie('email', user.email);
+      res.cookie('avatar', user.avatar);
+
+
       res.redirect(`${process.env['FRONTEND_URL']}`);
     }
 }
