@@ -1,4 +1,4 @@
-import { Injectable, Res, UnauthorizedException } from '@nestjs/common';
+import { Body, Injectable, Post, Res, UnauthorizedException } from '@nestjs/common';
 import { GooglePayload } from './google/google-payload.type';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { UserService } from 'src/user/user.service';
@@ -53,29 +53,25 @@ export class AuthService {
       return user;
     }
 
-      async login(user: User) {
-      const payload = { username: user.name, sub: user.id };
-      return {
-      access_token: this.jwtService.sign(payload),
-      };
-    }
+    //   async login(user: User) {
+    //   const payload = { username: user.name, sub: user.id };
+    //   return {
+    //   access_token: this.jwtService.sign(payload),
+    //   };
+    // }
 
-    async signIn(
-    username: string,
-    pass: string,
-  ): Promise<{ access_token: string }> {
-    const user = await this.userService.findByUsername(username);
-    if (user?.password !== pass) {
-      throw new UnauthorizedException();
-    }
-    const payload = { sub: user.id, username: user.name };
-    return {
-      access_token: await this.jwtService.signAsync(payload),
-    };
-  }
+async signIn( username: string, pass: string, ): Promise<{ access_token: string }> 
+{ const user = await this.userService.findByUsername(username);
+   if (user?.password !== pass) { 
+    throw new UnauthorizedException();
+   }
+  const payload = { sub: user.id, username: user.name }; 
+  return { access_token: await this.jwtService.signAsync(payload), 
 
-    
+  };
 
+
+}
 
 
 

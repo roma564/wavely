@@ -5,6 +5,7 @@ import { Response } from 'express';
 import { UserService } from 'src/user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from './guard/auth.guard';
+import { LoginDto } from './dto/login.dto';
 
 @Controller('oauth2')
 export class AuthController {
@@ -16,7 +17,7 @@ export class AuthController {
 
     @UseGuards(GoogleOAuth2Guard)
     @Get('login/google')
-    async login(@Request() _req) {
+    async loginGoogle(@Request() _req) {
       console.log('login with google');
     }
 
@@ -63,8 +64,15 @@ export class AuthController {
   // }
 
   @Post('login')
-  signIn(@Body() signInDto: Record<string, any>) {
-    return this.authService.signIn(signInDto.username, signInDto.password);
+  async login(@Res({ passthrough: true }) response: Response, @Body() body: LoginDto) {
+    const { access_token } = await this.authService.signIn(body.username, body.password);
+    response.cookie('access_token', access_token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
+      maxAge: 3600000, 
+    });
+    return { message: 'Logged in successfully' };
   }
 
   @UseGuards(AuthGuard)
