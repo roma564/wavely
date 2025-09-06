@@ -8,12 +8,14 @@ import { GatewayModule } from './gateway/gateway.module';
 import { AuthModule } from './auth/auth.module';
 import { UserService } from './user/user.service';
 import { PrismaService } from './prisma.service';
+// import { ConfigModule } from '@nestjs/config';
 
 
 
 
 @Module({
-  imports: [ UserModule, ChatModule, MessageModule, GatewayModule, AuthModule],
+  imports: [ UserModule, ChatModule, MessageModule, GatewayModule, AuthModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
