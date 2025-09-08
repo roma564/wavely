@@ -19,11 +19,13 @@ model User {
   name      String
   lastname  String
   email     String   @unique
-  password  String
-  chatAsA  Chat[]   @relation("UserAChat")
-  chatAsB  Chat[]   @relation("UserBChat")
+  password  String?
+  avatar    String?  
+  chatAsA   Chat[]   @relation("UserAChat")
+  chatAsB   Chat[]   @relation("UserBChat")
   messages  Message[]
 }
+
 
 model Chat {
   id           Int      @id @default(autoincrement())

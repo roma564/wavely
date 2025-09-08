@@ -4,7 +4,7 @@ import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { UserService } from 'src/user/user.service';
 import { Response } from 'express';
 import { JwtService } from '@nestjs/jwt';
-import { User } from 'generated/prisma';
+import { User } from './types/User'; 
 import * as bcrypt from 'bcrypt';
 
 // import { BadRequestException, Injectable } from '@nestjs/common';
@@ -25,22 +25,26 @@ export class AuthService {
 
   
 
-  async manageGoogleUser(profile: GooglePayload,  @Res({ passthrough: true }) res: Response): Promise<CreateUserDto> {
+async manageGoogleUser(profile: GooglePayload, @Res({ passthrough: true }) res: Response): Promise<User> {
+  const email = profile.emails?.[0]?.value;
+  // const avatar = profile.photos?.[0]?.value || null;
 
-      res.cookie('username', profile.displayName)
-      res.cookie('lastname', profile.name.familyName)
-      res.cookie('email', profile.emails[0].value,)
+  const user = await this.userService.create({
+    name: profile.displayName,
+    lastname: profile.name.familyName,
+    email,
+    avatar: profile.photos?.[0]?.value ?? undefined,
+  });
 
-    return this.userService.create({
-      name: profile.displayName,
-      lastname:profile.name.familyName,
-      email: profile.emails[0].value,
-      password:'google',
+  res.cookie('id', user.id);
+  res.cookie('username', user.name);
+  res.cookie('lastname', user.lastname);
+  res.cookie('email', user.email);
+  res.cookie('avatar', user.avatar ?? '');
 
-    //   avatar: profile.photos[0].value,
-    });
-    
-  }
+  return user;
+}
+
 
 
   async validateUser(username: string, password: string): Promise<User | null>{
@@ -60,18 +64,18 @@ export class AuthService {
     //   };
     // }
 
-async signIn( username: string, pass: string, ): Promise<{ access_token: string }> 
-{ const user = await this.userService.findByUsername(username);
-   if (user?.password !== pass) { 
-    throw new UnauthorizedException();
-   }
-  const payload = { sub: user.id, username: user.name }; 
-  return { access_token: await this.jwtService.signAsync(payload), 
+async signIn(username: string, password: string): Promise<{ access_token: string; user: User }> {
+  const user = await this.userService.findByUsername(username);
+  if (!user || user.password !== password) {
+    throw new UnauthorizedException('Invalid credentials');
+  }
 
-  };
+  const payload = { sub: user.id, username: user.name };
+  const access_token = await this.jwtService.signAsync(payload);
 
-
+  return { access_token, user };
 }
+
 
 
 
