@@ -6,8 +6,9 @@ import { UserService } from 'src/user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from './guard/auth.guard';
 import { LoginDto } from './dto/login.dto';
+import { CreateUserDto } from 'src/user/dto/create-user.dto';
 
-@Controller('oauth2')
+@Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService,
       private userService: UserService,
@@ -27,19 +28,19 @@ export class AuthController {
     async callbackGoogle(@Req() req, @Res({ passthrough: true }) res: Response) {
       const user = req.user;
 
-      // Генерація токена
+
       const payload = { sub: user.id, username: user.name };
       const access_token = await this.jwtService.signAsync(payload);
 
-      // Кукі з токеном
+
       res.cookie('access_token', access_token, {
         httpOnly: true,
-        secure: true,
-        sameSite: 'strict',
+        secure: false,
+        sameSite: 'lax',
         maxAge: 3600000,
       });
 
-      // Кукі з даними користувача
+
       res.cookie('id', user.id);
       res.cookie('username', user.name);
       res.cookie('lastname', user.lastname);
@@ -49,18 +50,45 @@ export class AuthController {
       res.redirect(`${process.env['FRONTEND_URL']}`);
     }
 
+    @Post('register')
+    async register(@Res({ passthrough: true }) response: Response, @Body() body: CreateUserDto) {
+
+      const user = await this.userService.create(body);
+
+      const payload = { sub: user.id, username: user.name };
+      const access_token = await this.jwtService.signAsync(payload);
+
+
+      response.cookie('access_token', access_token, {
+        httpOnly: false,
+        secure: true,
+        sameSite: 'strict',
+        maxAge: 3600000,
+      });
+
+
+      response.cookie('id', user.id);
+      response.cookie('username', user.name);
+      response.cookie('lastname', user.lastname);
+      response.cookie('email', user.email);
+      response.cookie('avatar', user.avatar ?? '');
+
+      return { message: 'Registered successfully' };
+    }
+
+
 
    
 
 
   @Post('login')
-async login(@Res({ passthrough: true }) response: Response, @Body() body: LoginDto) {
+  async login(@Res({ passthrough: true }) response: Response, @Body() body: LoginDto) {
   const { access_token, user } = await this.authService.signIn(body.username, body.password);
 
   response.cookie('access_token', access_token, {
     httpOnly: false,
-    secure: true,
-    sameSite: 'strict',
+    secure: false,
+    sameSite: 'lax',
     maxAge: 3600000,
   });
 
@@ -70,7 +98,12 @@ async login(@Res({ passthrough: true }) response: Response, @Body() body: LoginD
   response.cookie('email', user.email);
   response.cookie('avatar', user.avatar);
 
-  return { message: 'Logged in successfully' };
+ return {
+  message: 'Logged in successfully',
+  redirectUrl: 'http://localhost:3000/',
+};
+
+  
 }
 
 
