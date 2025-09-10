@@ -73,7 +73,10 @@ export class AuthController {
       response.cookie('email', user.email);
       response.cookie('avatar', user.avatar ?? '');
 
-      return { message: 'Registered successfully' };
+      return { 
+        message: 'Registered successfully' ,
+        redirectUrl: 'http://localhost:3000/',
+      };
     }
 
 
