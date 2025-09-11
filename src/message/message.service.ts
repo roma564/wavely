@@ -20,15 +20,29 @@ export class MessageService {
     private chatService: ChatService
   ){}
 
-  create(dto: CreateMessageDto) {
-    return this.prisma.message.create({
-      data:{    
-          content: dto.content,       
-          chatId: dto.chatId,
-          userId: dto.userId,
-      }
+  async create(dto: CreateMessageDto) {
+    const message = await this.prisma.message.create({
+      data: {
+        content: dto.content,
+        chatId: dto.chatId,
+        userId: dto.userId,
+      },
+    });
+
+    return this.prisma.message.findUnique({
+      where: { id: message.id },
+      include: {
+        author: {
+          select: {
+            name: true,
+            lastname: true,
+            avatar: true,
+          },
+        },
+      },
     });
   }
+
 
   findAll() {
     return this.prisma.message.findMany();
@@ -36,30 +50,57 @@ export class MessageService {
 
   findOne(id: number) {
     return this.prisma.message.findUnique({
-      where:{
-        id
-      }
-    });
+    where: {id}  ,
+    include: {
+      author: {
+        select: {
+          name: true,
+          lastname: true,
+          avatar: true,
+        },
+      },
+    },
+  });
   }
 
   findAllByChat(chatId: number) {
-    return this.prisma.message.findMany({
-      where:{
-        chatId
-      }
-    });
-  }
+  return this.prisma.message.findMany({
+    where: {
+      chatId,
+    },
+    include: {
+      author: {
+        select: {
+          name: true,
+          lastname: true,
+          avatar: true, 
+        },
+      },
+    },
+  });
+}
+
 
   findLast(chatId: number) {
-    return this.prisma.message.findFirst({
-      where: {
-        chatId,
+  return this.prisma.message.findFirst({
+    where: {
+      chatId,
+    },
+    orderBy: {
+      id: 'desc',
+    },
+    include: {
+      author: {
+        select: {
+          name: true,
+          lastname: true,
+          avatar: true,
+        },
       },
-      orderBy: {
-        id: 'desc',
-      },
-    });
-  }
+    },
+  });
+}
+
 
 
   async findAllLast(): Promise<Message[]> {

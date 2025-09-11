@@ -52,34 +52,22 @@ export class Gateway {
 
   @SubscribeMessage('createMessage')
   async createMessage(@MessageBody() data: string) {
-        try {
-        const parsed = typeof data === 'string' ? JSON.parse(data) : data;
+  try {
+    const parsed = typeof data === 'string' ? JSON.parse(data) : data;
 
 
-         this.messageService.create(parsed);
+    const createdMessage = await this.messageService.create(parsed);
 
 
+    this.server.emit(String(parsed.chatId), createdMessage);
 
-         this.server.emit(String(parsed.chatId), {
-              id: new Date(),
-              content: parsed.content,
-              chatId: parsed.chatId,
-              userId: parsed.userId,
-            });
-
-      
-     
-      console.log('Parsed:', parsed);
-
-    
+    console.log('Parsed:', parsed);
+    console.log('Emitted message:', createdMessage);
   } catch (e) {
     console.error('Failed to parse or process message:', e);
     throw e;
   }
-
-          // TODO check valid user in char (if 1 2 , 3 - cannot be))
-
-  }
+}
 
 
   @SubscribeMessage('findAllGateway')
