@@ -103,7 +103,7 @@ export class AuthController {
 
  return {
   message: 'Logged in successfully',
-  redirectUrl: 'http://localhost:3000/',
+  redirectUrl: 'http://localhost:3000/chat',
 };
 
   
