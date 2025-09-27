@@ -75,7 +75,7 @@ export class AuthController {
 
       return { 
         message: 'Registered successfully' ,
-        redirectUrl: 'http://localhost:3000/',
+        redirectUrl: process.env.FRONTEND_URL,
       };
     }
 
@@ -103,7 +103,7 @@ export class AuthController {
 
  return {
   message: 'Logged in successfully',
-  redirectUrl: 'http://localhost:3000/chat',
+  redirectUrl: process.env.FRONTEND_URL,
 };
 
   

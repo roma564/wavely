@@ -15,9 +15,10 @@ type Message = {
 }
 
 @WebSocketGateway({
-    cors: {
-        origin: ['http://localhost:3000']
-    }
+  cors: {
+    origin: '*',
+    credentials: true, 
+  },
 })
 export class Gateway {
   constructor(private readonly gatewayService: GatewayService,
