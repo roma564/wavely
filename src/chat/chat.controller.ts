@@ -22,6 +22,11 @@ export class ChatController {
     return this.chatService.findOne(+id);
   }
 
+  @Get('by-userID/:id')
+  findAllByUser(@Param('id') id: string) {
+    return this.chatService.findOne(+id);
+  }
+
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateChatDto: UpdateChatDto) {

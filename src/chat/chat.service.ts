@@ -29,6 +29,14 @@ export class ChatService {
     });
   }
 
+    findAllByUser(userId: number) {
+    return this.prisma.chat.findMany({
+      where: {
+        userAId: userId,
+      }
+    });
+}
+
   update( id: number,  updateDto: UpdateChatDto) {
     return this.prisma.chat.update({
     where: {
