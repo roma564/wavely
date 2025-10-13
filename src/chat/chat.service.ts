@@ -7,15 +7,17 @@ import { PrismaService } from 'src/prisma.service';
 export class ChatService {
   constructor(private prisma: PrismaService){}
   
-  create(dto: CreateChatDto) {
+    create(dto: CreateChatDto) {
     return this.prisma.chat.create({
-      data:{
+      data: {
         subject: dto.subject,
-        userAId: dto.userAId,
-        userBId: dto.userBId
-      }
+        users: {
+          connect: dto.userIds.map(id => ({ id })) 
+        }
+      },
     });
   }
+
 
   findAll() {
     return this.prisma.chat.findMany();
@@ -29,13 +31,30 @@ export class ChatService {
     });
   }
 
+  findManyByIds(ids: number[]) {
+  return this.prisma.chat.findMany({
+    where: {
+      id: {
+        in: ids,
+      },
+    },
+  });
+}
+
+
     findAllByUser(userId: number) {
     return this.prisma.chat.findMany({
       where: {
-        userAId: userId,
+        users: {
+          some: {
+            id: userId
+          }
+        }
       }
     });
-}
+  }
+
+
 
   update( id: number,  updateDto: UpdateChatDto) {
     return this.prisma.chat.update({

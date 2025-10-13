@@ -43,6 +43,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
       password: null,
       avatar: profile.photos?.[0]?.value || '',
     });
+    if (!user) throw new UnauthorizedException('User creation failed');
   }
 
   return user;

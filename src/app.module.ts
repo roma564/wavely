@@ -9,12 +9,13 @@ import { AuthModule } from './auth/auth.module';
 import { UserService } from './user/user.service';
 import { PrismaService } from './prisma.service';
 // import { ConfigModule } from '@nestjs/config';
+import { ModeModule } from './mode/mode.module';
 
 
 
 
 @Module({
-  imports: [ UserModule, ChatModule, MessageModule, GatewayModule, AuthModule,
+  imports: [ UserModule, ChatModule, MessageModule, GatewayModule, AuthModule, ModeModule,
   ],
   controllers: [AppController],
   providers: [AppService],

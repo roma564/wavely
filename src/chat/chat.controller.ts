@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { ChatService } from './chat.service';
 import { CreateChatDto } from './dto/create-chat.dto';
 import { UpdateChatDto } from './dto/update-chat.dto';
@@ -22,9 +22,15 @@ export class ChatController {
     return this.chatService.findOne(+id);
   }
 
+  @Get('by-ids')
+  findChatsByIds(@Query('ids') ids: string) {
+    const parsedIds = ids.split(',').map(id => Number(id));
+    return this.chatService.findManyByIds(parsedIds);
+  }
+
   @Get('by-userID/:id')
   findAllByUser(@Param('id') id: string) {
-    return this.chatService.findOne(+id);
+    return this.chatService.findAllByUser(+id);
   }
 
 

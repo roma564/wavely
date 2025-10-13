@@ -6,7 +6,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
 }
 
 datasource db {
@@ -19,35 +18,60 @@ model User {
   name      String
   lastname  String
   email     String   @unique
-  password  String?
+  password  String?  
   avatar    String?  
-  chatAsA   Chat[]   @relation("UserAChat")
-  chatAsB   Chat[]   @relation("UserBChat")
-  messages  Message[]
-}
 
+  chats      Chat[]  @relation("UserChats")
+
+  modes     Mode[]  
+
+  messages   Message[]
+}
 
 model Chat {
   id           Int      @id @default(autoincrement())
-  subject      String?
-  createdDate  DateTime  @default(now())
-  messages     Message[] // One-to-many: Chat → Messages
-  userA   User  @relation("UserAChat", fields: [userAId], references: [id])
-  userAId Int
+  subject      String?  // необов’язковий
+  createdDate  DateTime @default(now())
+  users     User[]   @relation("UserChats")
 
-  userB   User  @relation("UserBChat", fields: [userBId], references: [id])
-  userBId Int
+  modes   Mode[] @relation("ChatModes")
+  
+  messages     Message[]
 }
 
 model Message {
-  id        Int      @id @default(autoincrement())
-  content   String
-  chat      Chat     @relation(fields: [chatId], references: [id])
-  chatId    Int
-  author    User   @relation(fields: [userId], references: [id])
-  userId    Int
+  id       Int      @id @default(autoincrement())
+  content  String
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt DateTime @default(now())
+  
+
+  userId   Int
+  user     User     @relation(fields: [userId], references: [id])
+
+  chatId   Int
+  chat     Chat     @relation(fields: [chatId], references: [id])
+
   
 }
+
+
+model Mode {
+  id                  Int      @id @default(autoincrement())
+  name                String
+  primaryColor        String
+  secondaryColor      String
+  textColor           String
+  secondaryTextColor  String
+  bgColor             String
+  scheduledCallMode   Boolean
+  stickers            Boolean
+  restrictedSmileMode Boolean
+
+  userId              Int
+  user                User     @relation(fields: [userId], references: [id])
+  chats               Chat[]   @relation("ChatModes")
+
+}
+
 

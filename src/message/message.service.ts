@@ -32,7 +32,7 @@ export class MessageService {
     return this.prisma.message.findUnique({
       where: { id: message.id },
       include: {
-        author: {
+        user: {
           select: {
             name: true,
             lastname: true,
@@ -52,7 +52,7 @@ export class MessageService {
     return this.prisma.message.findUnique({
     where: {id}  ,
     include: {
-      author: {
+      user: {
         select: {
           name: true,
           lastname: true,
@@ -69,7 +69,7 @@ export class MessageService {
       chatId,
     },
     include: {
-      author: {
+      user: {
         select: {
           name: true,
           lastname: true,
@@ -90,7 +90,7 @@ export class MessageService {
       id: 'desc',
     },
     include: {
-      author: {
+      user: {
         select: {
           name: true,
           lastname: true,
