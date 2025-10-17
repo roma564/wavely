@@ -51,24 +51,31 @@ export class Gateway {
   }
 
 
-  @SubscribeMessage('createMessage')
-  async createMessage(@MessageBody() data: string) {
+
+
+@SubscribeMessage('createMessage')
+async createMessage(@MessageBody() data: any) {
   try {
-    const parsed = typeof data === 'string' ? JSON.parse(data) : data;
+    const createdMessage = await this.messageService.create({
+      chatId: Number(data.chatId),
+      userId: Number(data.userId),
+      content: data.content ?? null,
+      imageUrl: data.imageUrl ?? null,
+      fileUrl: data.fileUrl ?? null,
+      fileName: data.fileName ?? null,
+      fileSize: data.fileSize ?? null,
+    });
 
+    // Розсилаємо тільки в кімнату чату
+    this.server.emit(String(data.chatId), createdMessage);
 
-    const createdMessage = await this.messageService.create(parsed);
-
-
-    this.server.emit(String(parsed.chatId), createdMessage);
-
-    console.log('Parsed:', parsed);
-    console.log('Emitted message:', createdMessage);
+    return createdMessage;
   } catch (e) {
-    console.error('Failed to parse or process message:', e);
+    console.error('Failed to create message:', e);
     throw e;
   }
 }
+
 
 
   @SubscribeMessage('findAllGateway')

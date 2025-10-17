@@ -3,15 +3,20 @@ import { CreateMessageDto } from './dto/create-message.dto';
 import { UpdateMessageDto } from './dto/update-message.dto';
 import { PrismaService } from 'src/prisma.service';
 import { ChatService } from 'src/chat/chat.service';
-
 type Message = {
-  id:number
-  content:string
-  chatId:number
-  userId:number
-  createdAt:Date,
-  updatedAt:Date
-}
+  id: number;
+  content: string | null;
+  imageUrl: string | null;
+  fileUrl: string | null;
+  fileName: string | null;
+  fileSize: number | null;
+  chatId: number;
+  userId: number;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+
 
 @Injectable()
 export class MessageService {
@@ -21,27 +26,34 @@ export class MessageService {
   ){}
 
   async create(dto: CreateMessageDto) {
-    const message = await this.prisma.message.create({
-      data: {
-        content: dto.content,
-        chatId: dto.chatId,
-        userId: dto.userId,
-      },
-    });
 
-    return this.prisma.message.findUnique({
-      where: { id: message.id },
-      include: {
-        user: {
-          select: {
-            name: true,
-            lastname: true,
-            avatar: true,
-          },
+    console.log('message create dto - ' + dto.imageUrl)
+  const message = await this.prisma.message.create({
+    data: {
+      content: dto.content ?? null,
+      chatId: dto.chatId,
+      userId: dto.userId,
+      imageUrl: dto.imageUrl ?? null,
+      fileUrl: dto.fileUrl ?? null,
+      fileName: dto.fileName ?? null,
+      fileSize: dto.fileSize ?? null,
+    },
+  });
+
+  return this.prisma.message.findUnique({
+    where: { id: message.id },
+    include: {
+      user: {
+        select: {
+          name: true,
+          lastname: true,
+          avatar: true,
         },
       },
-    });
-  }
+    },
+  });
+}
+
 
 
   findAll() {
