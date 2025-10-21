@@ -39,23 +39,35 @@ model Chat {
   messages     Message[]
 }
 
+enum MessageType {
+  TEXT
+  IMAGE
+  FILE
+  LINK
+}
+
+
 model Message {
   id         Int      @id @default(autoincrement())
-  content    String?  // текст повідомлення (необов’язковий)
-  imageUrl   String?  // шлях до зображення
-  fileUrl    String?  // шлях до файлу
-  fileName   String?  // назва файлу (для відображення)
-  fileSize   Int?     // розмір у байтах
 
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @default(now())
+  content    String?   
+  fileUrl    String?   
+  fileName   String?   
+  fileSize   Int?      
+  mimeType   String?   
+
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 
   userId     Int
-  user       User     @relation(fields: [userId], references: [id])
+  user       User      @relation(fields: [userId], references: [id])
 
   chatId     Int
-  chat       Chat     @relation(fields: [chatId], references: [id])
+  chat       Chat      @relation(fields: [chatId], references: [id])
 }
+
+
+
 
 
 

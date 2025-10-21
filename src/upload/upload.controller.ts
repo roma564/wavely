@@ -1,37 +1,34 @@
 import {
   BadRequestException,
-  Body,
   Controller,
   Post,
   UploadedFile,
   UseInterceptors,
-} from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { multerConfig } from './multer.config';
-import { UploadService } from './upload.service';
-import { MessageService } from 'src/message/message.service';
+} from '@nestjs/common'
+import { FileInterceptor } from '@nestjs/platform-express'
+import { diskStorage } from 'multer'
+import { extname } from 'path'
 
 @Controller('upload')
 export class UploadController {
-  constructor(
-    private readonly uploadService: UploadService,
-    private readonly messageService:MessageService
-  ) {}
+  @Post('file')
+  @UseInterceptors(FileInterceptor('file', {
+    storage: diskStorage({
+      destination: './uploads/files',
+      filename: (req, file, cb) => {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9)
+        cb(null, uniqueSuffix + extname(file.originalname))
+      },
+    }),
+  }))
+  uploadFile(@UploadedFile() file: Express.Multer.File) {
+    if (!file) throw new BadRequestException('Файл не завантажено')
 
-@Post('image')
-@UseInterceptors(FileInterceptor('file', multerConfig))
-async uploadImage(@UploadedFile() file: Express.Multer.File) {
-  if (!file) throw new BadRequestException('Файл не завантажено');
-
-  const metadata = await this.uploadService.saveImage(file);
-
-  return {
-    path: `/uploads/images/${metadata.filename}`,
-    fileName: metadata.originalName,
-    fileSize: metadata.size,
-  };
-}
-
-
-
+    return {
+      path: `/uploads/files/${file.filename}`,
+      fileName: file.originalname,
+      fileSize: file.size,
+      mimeType: file.mimetype,
+    }
+  }
 }

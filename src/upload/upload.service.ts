@@ -9,7 +9,6 @@ import * as path from 'path';
 @Injectable()
 export class UploadService {
   async saveImage(file: Express.Multer.File) {
-    console.log('UploadService - ' + file.filename)
     return {
       originalName: file.originalname,
       filename: file.filename,

@@ -60,13 +60,12 @@ async createMessage(@MessageBody() data: any) {
       chatId: Number(data.chatId),
       userId: Number(data.userId),
       content: data.content ?? null,
-      imageUrl: data.imageUrl ?? null,
       fileUrl: data.fileUrl ?? null,
       fileName: data.fileName ?? null,
       fileSize: data.fileSize ?? null,
+      mimeType: data.mimeType ?? null, 
     });
 
-    // Розсилаємо тільки в кімнату чату
     this.server.emit(String(data.chatId), createdMessage);
 
     return createdMessage;
@@ -75,6 +74,7 @@ async createMessage(@MessageBody() data: any) {
     throw e;
   }
 }
+
 
 
 
