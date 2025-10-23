@@ -9,6 +9,7 @@ export type Message = {
   content: string | null
   fileUrl: string | null
   fileName: string | null
+  savedFileName: string | null 
   fileSize: number | null
   mimeType: string | null
   chatId: number
@@ -20,6 +21,7 @@ export type Message = {
 
 
 
+
 @Injectable()
 export class MessageService {
   constructor (
@@ -27,22 +29,23 @@ export class MessageService {
     private chatService: ChatService
   ){}
 
-  async create(dto: CreateMessageDto) {
-    const message = await this.prisma.message.create({
-      data: {
-        content: dto.content ?? null,
-        chatId: dto.chatId,
-        userId: dto.userId,
-        fileUrl: dto.fileUrl ?? null,
-        fileName: dto.fileName ?? null,
-        fileSize: dto.fileSize ?? null,
-        mimeType: dto.mimeType ?? null, // 👈 додаємо mimeType
-      },
-      include: {
-        user: true,
-        chat: true,
-      },
-   });
+async create(dto: CreateMessageDto) {
+  const message = await this.prisma.message.create({
+    data: {
+      content: dto.content ?? null,
+      chatId: dto.chatId,
+      userId: dto.userId,
+      fileUrl: dto.fileUrl ?? null,
+      fileName: dto.fileName ?? null,
+      savedFileName: dto.savedFileName ?? null, 
+      fileSize: dto.fileSize ?? null,
+      mimeType: dto.mimeType ?? null, 
+    },
+    include: {
+      user: true,
+      chat: true,
+    },
+  })
 
   return this.prisma.message.findUnique({
     where: { id: message.id },
@@ -55,8 +58,9 @@ export class MessageService {
         },
       },
     },
-  });
+  })
 }
+
 
 
 

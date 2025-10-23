@@ -3,7 +3,7 @@ import { IsInt, IsOptional, IsString, IsNumber } from 'class-validator';
 export class CreateMessageDto {
   @IsOptional()
   @IsString()
-  content?: string; // текст або лінк
+  content?: string;
 
   @IsInt()
   chatId: number;
@@ -13,11 +13,15 @@ export class CreateMessageDto {
 
   @IsOptional()
   @IsString()
-  fileUrl?: string; // шлях до файлу (і для зображень теж)
+  fileUrl?: string;
 
   @IsOptional()
   @IsString()
   fileName?: string;
+
+  @IsOptional()
+  @IsString()
+  savedFileName?: string;
 
   @IsOptional()
   @IsNumber()
@@ -25,5 +29,5 @@ export class CreateMessageDto {
 
   @IsOptional()
   @IsString()
-  mimeType?: string; // 👈 нове поле для визначення типу файлу
+  mimeType?: string;
 }

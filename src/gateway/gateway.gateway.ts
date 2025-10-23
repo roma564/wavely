@@ -7,12 +7,7 @@ import { ChatService } from 'src/chat/chat.service';
 import { MessageService } from 'src/message/message.service';
 import { Server } from 'socket.io';
 
-type Message = {  
-  id:number,
-  content: string;
-  chatId: number;
-  userId: number;
-}
+
 
 @WebSocketGateway({
   cors: {
@@ -62,9 +57,11 @@ async createMessage(@MessageBody() data: any) {
       content: data.content ?? null,
       fileUrl: data.fileUrl ?? null,
       fileName: data.fileName ?? null,
+      savedFileName: data.savedFileName ?? null, 
       fileSize: data.fileSize ?? null,
       mimeType: data.mimeType ?? null, 
     });
+
 
     this.server.emit(String(data.chatId), createdMessage);
 

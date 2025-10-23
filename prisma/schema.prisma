@@ -48,23 +48,25 @@ enum MessageType {
 
 
 model Message {
-  id         Int      @id @default(autoincrement())
+  id             Int      @id @default(autoincrement())
 
-  content    String?   
-  fileUrl    String?   
-  fileName   String?   
-  fileSize   Int?      
-  mimeType   String?   
+  content        String?
+  fileUrl        String?
+  fileName       String?   
+  savedFileName  String?   
+  fileSize       Int?
+  mimeType       String?
 
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
 
-  userId     Int
-  user       User      @relation(fields: [userId], references: [id])
+  userId         Int
+  user           User      @relation(fields: [userId], references: [id])
 
-  chatId     Int
-  chat       Chat      @relation(fields: [chatId], references: [id])
+  chatId         Int
+  chat           Chat      @relation(fields: [chatId], references: [id])
 }
+
 
 
 
