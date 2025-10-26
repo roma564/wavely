@@ -1,6 +1,12 @@
-import { IsInt, IsOptional, IsString, IsNumber } from 'class-validator';
+import { IsInt, IsOptional, IsString, IsNumber, IsEnum } from 'class-validator';
+import { MessageType } from 'src/types/MessageType';
+
+
 
 export class CreateMessageDto {
+  @IsEnum(MessageType)
+  type: MessageType;
+
   @IsOptional()
   @IsString()
   content?: string;

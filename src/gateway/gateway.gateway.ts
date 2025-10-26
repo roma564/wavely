@@ -6,6 +6,7 @@ import { ChatService } from 'src/chat/chat.service';
 
 import { MessageService } from 'src/message/message.service';
 import { Server } from 'socket.io';
+import { MessageType } from 'src/types/MessageType';
 
 
 
@@ -50,17 +51,20 @@ export class Gateway {
 
 @SubscribeMessage('createMessage')
 async createMessage(@MessageBody() data: any) {
+
   try {
     const createdMessage = await this.messageService.create({
-      chatId: Number(data.chatId),
-      userId: Number(data.userId),
-      content: data.content ?? null,
-      fileUrl: data.fileUrl ?? null,
-      fileName: data.fileName ?? null,
-      savedFileName: data.savedFileName ?? null, 
-      fileSize: data.fileSize ?? null,
-      mimeType: data.mimeType ?? null, 
-    });
+    type: data.type, // ← обов’язково
+    chatId: Number(data.chatId),
+    userId: Number(data.userId),
+    content: data.content ?? null,
+    fileUrl: data.fileUrl ?? null,
+    fileName: data.fileName ?? null,
+    savedFileName: data.savedFileName ?? null,
+    fileSize: data.fileSize ?? null,
+    mimeType: data.mimeType ?? null,
+  });
+
 
 
     this.server.emit(String(data.chatId), createdMessage);

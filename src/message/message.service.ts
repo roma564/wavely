@@ -3,22 +3,7 @@ import { CreateMessageDto } from './dto/create-message.dto';
 import { UpdateMessageDto } from './dto/update-message.dto';
 import { PrismaService } from 'src/prisma.service';
 import { ChatService } from 'src/chat/chat.service';
-
-export type Message = {
-  id: number
-  content: string | null
-  fileUrl: string | null
-  fileName: string | null
-  savedFileName: string | null 
-  fileSize: number | null
-  mimeType: string | null
-  chatId: number
-  userId: number
-  createdAt: Date
-  updatedAt: Date
-}
-
-
+import { Message } from 'src/types/Message';
 
 
 
@@ -32,12 +17,12 @@ export class MessageService {
 async create(dto: CreateMessageDto) {
   const message = await this.prisma.message.create({
     data: {
+      type: dto.type,
       content: dto.content ?? null,
       chatId: dto.chatId,
       userId: dto.userId,
       fileUrl: dto.fileUrl ?? null,
       fileName: dto.fileName ?? null,
-      savedFileName: dto.savedFileName ?? null, 
       fileSize: dto.fileSize ?? null,
       mimeType: dto.mimeType ?? null, 
     },
