@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { CreateModeDto } from './dto/create-mode.dto';
+import { Prisma, ThemeName } from '@prisma/client';
 
 @Injectable()
 export class ModeService {
@@ -44,7 +45,32 @@ export class ModeService {
   }
 
 
+
+async setTheme(modeId: number, theme: ThemeName) {
+  return this.prisma.mode.update({
+    where: { id: modeId },
+    data: { theme }, 
+  });
 }
+
+
+
+
+
+
+
+
+
+
+}
+
+
+  
+
+
+
+
+
 
 
 

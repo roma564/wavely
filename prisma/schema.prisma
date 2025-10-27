@@ -12,6 +12,14 @@ enum MessageType {
   STICKER
 }
 
+enum ThemeName {
+  BLUE
+  GREEN
+  YELLOW
+  PURPLE
+}
+
+
 
 generator client {
   provider = "prisma-client-js"
@@ -78,21 +86,18 @@ model Message {
 
 
 model Mode {
-  id                  Int      @id @default(autoincrement())
-  name                String
-  primaryColor        String
-  secondaryColor      String
-  textColor           String
-  secondaryTextColor  String
-  bgColor             String
+  id                  Int        @id @default(autoincrement())
+  name                String    
+  theme               ThemeName  
   scheduledCallMode   Boolean
   stickers            Boolean
   restrictedSmileMode Boolean
 
   userId              Int
-  user                User     @relation(fields: [userId], references: [id])
-  chats               Chat[]   @relation("ChatModes")
-
+  user                User       @relation(fields: [userId], references: [id])
+  chats               Chat[]     @relation("ChatModes")
 }
+
+
 
 

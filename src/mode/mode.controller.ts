@@ -1,6 +1,7 @@
 import { Controller, Get, Param, Post, Body, Patch } from '@nestjs/common';
 import { ModeService } from './mode.service';
 import { CreateModeDto } from './dto/create-mode.dto';
+import { UpdateThemeDto } from './dto/update-theme.dto';
 
 @Controller('mode')
 export class ModeController {
@@ -28,6 +29,16 @@ export class ModeController {
   getChatsByMode(@Param('modeId') modeId: string) {
     return this.modeService.getChatsByMode(+modeId);
   }
+
+
+  @Patch(':modeId/set-theme')
+  async setTheme(
+    @Param('modeId') modeId: string,
+    @Body() dto: UpdateThemeDto
+  ) {
+    return this.modeService.setTheme(+modeId, dto.theme);
+  }
+
 
 
 

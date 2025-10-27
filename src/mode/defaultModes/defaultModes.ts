@@ -1,35 +1,32 @@
+import { ThemeName } from '@prisma/client'
+
 export const defaultModes = [
   {
     name: 'standartMode',
-    primaryColor: '#3D99F5',
-    secondaryColor: '#21364A',
-    textColor: '#E5E8EB',
-    secondaryTextColor: '#8FADCC',
-    bgColor: '#0F1A24',
+    theme: ThemeName.BLUE,
     scheduledCallMode: true,
     stickers: false,
     restrictedSmileMode: true,
   },
   {
     name: 'workMode',
-    primaryColor: '#3D99F5',
-    secondaryColor: '#21364A',
-    textColor: '#E5E8EB',
-    secondaryTextColor: '#8FADCC',
-    bgColor: '#0F1A24',
+    theme: ThemeName.GREEN,
     scheduledCallMode: false,
     stickers: true,
     restrictedSmileMode: true,
   },
   {
     name: 'familyMode',
-    primaryColor: '#FAD938',
-    secondaryColor: '#F5F2E5',
-    textColor: '#1C1A0D',
-    secondaryTextColor: '#9E8F47',
-    bgColor: '#FFFFFF',
+    theme: ThemeName.YELLOW,
     scheduledCallMode: false,
     stickers: true,
     restrictedSmileMode: true,
   },
-];
+  {
+    name: 'creativeMode',
+    theme: ThemeName.PURPLE,
+    scheduledCallMode: true,
+    stickers: true,
+    restrictedSmileMode: false,
+  },
+]

@@ -1,33 +1,22 @@
-import { IsBoolean, IsInt, IsString } from 'class-validator';
+import { IsBoolean, IsEnum, IsInt, IsString } from 'class-validator'
+import { ThemeName } from '@prisma/client'
 
 export class CreateModeDto {
   @IsString()
-  name: string;
+  name: string 
 
-  @IsString()
-  primaryColor: string;
-
-  @IsString()
-  secondaryColor: string;
-
-  @IsString()
-  textColor: string;
-
-  @IsString()
-  secondaryTextColor: string;
-
-  @IsString()
-  bgColor: string;
+  @IsEnum(ThemeName)
+  theme: ThemeName 
 
   @IsBoolean()
-  scheduledCallMode: boolean;
+  scheduledCallMode: boolean
 
   @IsBoolean()
-  stickers: boolean;
+  stickers: boolean
 
   @IsBoolean()
-  restrictedSmileMode: boolean;
+  restrictedSmileMode: boolean
 
   @IsInt()
-  userId: number;
+  userId: number
 }
