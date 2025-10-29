@@ -7,6 +7,7 @@ import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from './guard/auth.guard';
 import { LoginDto } from './dto/login.dto';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
+import { StreamClient } from '@stream-io/node-sdk';
 
 @Controller('auth')
 export class AuthController {
@@ -84,29 +85,40 @@ export class AuthController {
    
 
 
-  @Post('login')
-  async login(@Res({ passthrough: true }) response: Response, @Body() body: LoginDto) {
+
+@Post('login')
+async login(@Res({ passthrough: true }) response: Response, @Body() body: LoginDto) {
   const { access_token, user } = await this.authService.signIn(body.username, body.password);
 
-  response.cookie('access_token', access_token, {
+  // STREAM токен
+  const streamClient = new StreamClient(
+    process.env.STREAM_API_KEY!,
+    process.env.STREAM_SECRET_KEY!
+  );
+
+  const stream_token = streamClient.createToken(String(user.id));
+
+  // Куки
+  const cookieOptions = {
     httpOnly: false,
-    secure: false,
-    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax' as const,
     maxAge: 3600000,
-  });
+  };
 
-  response.cookie('id', user.id);
-  response.cookie('username', user.name);
-  response.cookie('lastname', user.lastname);
-  response.cookie('email', user.email);
-  response.cookie('avatar', user.avatar);
+  response.cookie('access_token', access_token, cookieOptions);
+  response.cookie('stream_token', stream_token, { ...cookieOptions, httpOnly: false });
 
- return {
-  message: 'Logged in successfully',
-  redirectUrl: process.env.FRONTEND_URL,
-};
+  response.cookie('id', user.id, { ...cookieOptions, httpOnly: false });
+  response.cookie('username', user.name, { ...cookieOptions, httpOnly: false });
+  response.cookie('lastname', user.lastname, { ...cookieOptions, httpOnly: false });
+  response.cookie('email', user.email, { ...cookieOptions, httpOnly: false });
+  response.cookie('avatar', user.avatar, { ...cookieOptions, httpOnly: false });
 
-  
+  return {
+    message: 'Logged in successfully',
+    redirectUrl: process.env.FRONTEND_URL,
+  };
 }
 
 
