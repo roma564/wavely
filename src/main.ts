@@ -24,8 +24,8 @@ const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.useStaticAssets(join(__dirname, '..', 'uploads'), {
     prefix: '/uploads/', // URL-префікс
   });
-  // await app.listen(5000, '192.168.0.100');
-  await app.listen(process.env.PORT ?? 5000);
+  await app.listen(5000, '192.168.0.105');
+  // await app.listen(process.env.PORT ?? 5000);
 }
 bootstrap();
 
