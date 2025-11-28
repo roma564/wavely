@@ -103,8 +103,9 @@ async login(@Res({ passthrough: true }) response: Response, @Body() body: LoginD
     httpOnly: false,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax' as const,
-    maxAge: 3600000,
+    maxAge: 24 * 60 * 60 * 1000, // 24 години
   };
+
 
   response.cookie('access_token', access_token, cookieOptions);
   response.cookie('stream_token', stream_token, { ...cookieOptions, httpOnly: false });
