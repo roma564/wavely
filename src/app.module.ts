@@ -11,12 +11,13 @@ import { PrismaService } from './prisma.service';
 // import { ConfigModule } from '@nestjs/config';
 import { ModeModule } from './mode/mode.module';
 import { UploadModule } from './upload/upload.module';
+import { MeetingModule } from './meeting/meeting.module';
 
 
 
 
 @Module({
-  imports: [ UserModule, ChatModule, MessageModule, GatewayModule, AuthModule, ModeModule, UploadModule,
+  imports: [ UserModule, ChatModule, MessageModule, GatewayModule, AuthModule, ModeModule, UploadModule, MeetingModule,
   ],
   controllers: [AppController],
   providers: [AppService],

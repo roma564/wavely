@@ -43,6 +43,9 @@ model User {
   modes     Mode[]  
 
   messages   Message[]
+
+  meetings  Meeting[] @relation("OwnerMeetings") 
+  invitedTo Meeting[] @relation("InvitedUsers")
 }
 
 model Chat {
@@ -96,6 +99,16 @@ model Mode {
   userId              Int
   user                User       @relation(fields: [userId], references: [id])
   chats               Chat[]     @relation("ChatModes")
+}
+
+model Meeting {
+  id          Int        @id @default(autoincrement())
+  title       String
+  startDate   DateTime
+  ownerId     Int
+  owner       User     @relation("OwnerMeetings", fields: [ownerId], references: [id])
+  invited_users   User[]   @relation("InvitedUsers")
+  createdAt   DateTime @default(now())
 }
 
 
