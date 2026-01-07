@@ -3,6 +3,7 @@ import { CreateMeetingDto } from './dto/create-meeting.dto';
 import { UpdateMeetingDto } from './dto/update-meeting.dto';
 import { PrismaService } from 'src/prisma.service';
 
+
 @Injectable()
 export class MeetingService {
   constructor(private readonly prisma: PrismaService) {}
