@@ -86,29 +86,43 @@ export class AuthController {
 
 
 
-@Post('login')
-async login(@Res({ passthrough: true }) response: Response, @Body() body: LoginDto) {
-  const { access_token, user } = await this.authService.signIn(body.username, body.password);
 
-  // STREAM токен
+@Post('login')
+async login(
+  @Res({ passthrough: true }) response: Response,
+  @Body() body: LoginDto,
+) {
+
+  const { user } = await this.authService.signIn(body.username, body.password);
+
+  const payload = { sub: user.id, username: user.name };
+  const access_token = await this.jwtService.signAsync(payload, {
+    secret: process.env.JWT_SECRET,   
+    expiresIn: '1h',                  
+  });
+
+
   const streamClient = new StreamClient(
     process.env.STREAM_API_KEY!,
-    process.env.STREAM_SECRET_KEY!
+    process.env.STREAM_SECRET_KEY!,
   );
-
   const stream_token = streamClient.createToken(String(user.id));
 
-  // Куки
+
   const cookieOptions = {
-    httpOnly: false,
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax' as const,
-    maxAge: 24 * 60 * 60 * 1000, // 24 години
+    sameSite: 'strict' as const,
+    maxAge: 60 * 60 * 1000, // 1 година
   };
 
+  response.cookie('access_token', access_token, {
+    ...cookieOptions,
+  });
 
-  response.cookie('access_token', access_token, cookieOptions);
-  response.cookie('stream_token', stream_token, { ...cookieOptions, httpOnly: false });
+  response.cookie('stream_token', stream_token, {
+    ...cookieOptions,
+    httpOnly: false,
+  });
 
   response.cookie('id', user.id, { ...cookieOptions, httpOnly: false });
   response.cookie('username', user.name, { ...cookieOptions, httpOnly: false });
@@ -121,6 +135,7 @@ async login(@Res({ passthrough: true }) response: Response, @Body() body: LoginD
     redirectUrl: process.env.FRONTEND_URL,
   };
 }
+
 
 
   @UseGuards(AuthGuard)
