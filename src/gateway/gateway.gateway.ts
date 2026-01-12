@@ -76,6 +76,28 @@ async createMessage(@MessageBody() data: any) {
   }
 }
 
+@SubscribeMessage('startCall')
+async startCall(@MessageBody() data: any) {
+  try {
+    const { chatId, userId, callId } = data;
+
+    // Еміт події всім учасникам чату (без збереження в БД)
+    this.server.emit(`call-${chatId}`, {
+      callId,
+      chatId,
+      userId,
+      type: 'CALL_REQUEST',
+    });
+
+    return { status: 'ok', callId };
+  } catch (e) {
+    console.error('Failed to start call:', e);
+    throw e;
+  }
+}
+
+
+
 
 
 
