@@ -21,6 +21,12 @@ export class UserController {
   findOne(@Param('id') id: string) {
     return this.userService.getById(+id);
   }
+  
+  @Get('chat/:chatId')
+  findUsersByChat(@Param('chatId') chatId: string) {
+    return this.userService.findUsersByChatId(+chatId);
+  }
+
 
   @Delete(':id')
   remove(@Param('id') id: string) {

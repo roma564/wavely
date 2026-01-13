@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateChatDto } from './dto/create-chat.dto';
 import { UpdateChatDto } from './dto/update-chat.dto';
 import { PrismaService } from 'src/prisma.service';
+import { User } from 'generated/prisma';
 
 @Injectable()
 export class ChatService {
@@ -53,6 +54,15 @@ export class ChatService {
       }
     });
   }
+
+  async findUsersByChatId(chatId: number): Promise<User[]> {
+    const chat = await this.prisma.chat.findUnique({
+      where: { id: chatId },
+      include: { users: true },
+    });
+    return chat?.users ?? [];
+  }
+
 
 
 

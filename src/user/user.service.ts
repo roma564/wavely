@@ -49,6 +49,19 @@ export class UserService {
     })
   }
 
+  async findUsersByChatId(chatId: number): Promise<User[]> {
+  return this.prisma.user.findMany({
+    where: {
+      chats: {
+        some: {
+          id: chatId,
+        },
+      },
+    },
+  });
+}
+
+
   async findByUsername(identifier: string): Promise<User | null> {
   return this.prisma.user.findFirst({
     where: {
@@ -57,7 +70,12 @@ export class UserService {
         { name: identifier },
       ],
     },
+
+
+    
   });
+
+  
 
 
 }
