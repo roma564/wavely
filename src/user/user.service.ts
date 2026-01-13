@@ -61,6 +61,12 @@ export class UserService {
   });
 }
 
+  async updateAvatar(userId: string, avatarUrl: string) {
+    return this.prisma.user.update({
+      where: { id: Number(userId) },
+      data: { avatar: avatarUrl },
+    });
+  }
 
   async findByUsername(identifier: string): Promise<User | null> {
   return this.prisma.user.findFirst({
@@ -70,6 +76,11 @@ export class UserService {
         { name: identifier },
       ],
     },
+
+    
+  
+
+
 
 
     

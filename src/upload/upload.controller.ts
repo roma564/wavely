@@ -5,6 +5,7 @@ import {
   Param,
   Post,
   Query,
+  Req,
   Res,
   UploadedFile,
   UseInterceptors,
@@ -14,10 +15,12 @@ import { FileInterceptor } from '@nestjs/platform-express'
 import { Response } from 'express'
 import { diskStorage } from 'multer'
 import * as path from 'path'
+import { UserService } from 'src/user/user.service'
 
 
 @Controller('upload')
 export class UploadController {
+  constructor(private readonly userService: UserService) {}
 
   @Post('file')
   @UseInterceptors(FileInterceptor('file', {
@@ -68,8 +71,12 @@ downloadFile(
   res.sendFile(filePath)
 }
 
+ 
+
+
   @Post('avatar')
-  @UseInterceptors(FileInterceptor('avatar', {
+@UseInterceptors(
+  FileInterceptor('avatar', {
     storage: diskStorage({
       destination: './uploads/avatars',
       filename: (req, file, cb) => {
@@ -87,17 +94,33 @@ downloadFile(
     limits: {
       fileSize: 2 * 1024 * 1024, // максимум 2MB
     },
-  }))
-  uploadAvatar(@UploadedFile() file: Express.Multer.File) {
-    if (!file) throw new BadRequestException('Аватар не завантажено');
-
-    return {
-      avatarUrl: `/uploads/avatars/${file.filename}`,
-      fileName: file.originalname,
-      fileSize: file.size,
-      mimeType: file.mimetype,
-    };
+  }),
+)
+async uploadAvatar(@UploadedFile() file: Express.Multer.File, @Req() req) {
+  if (!file) {
+    throw new BadRequestException('Аватар не завантажено');
   }
+
+  const avatarUrl = `/uploads/avatars/${file.filename}`;
+
+  // беремо userId з form-data
+  const userId = req.body.userId;
+  if (!userId) {
+    throw new BadRequestException('userId is required');
+  }
+
+  await this.userService.updateAvatar(userId, avatarUrl);
+
+  return {
+    avatarUrl,
+    fileName: file.originalname,
+    fileSize: file.size,
+    mimeType: file.mimetype,
+  };
+}
+
+
+ 
 
   @Get('avatar')
   downloadAvatar(

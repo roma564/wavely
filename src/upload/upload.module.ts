@@ -6,10 +6,11 @@ import { ChatService } from 'src/chat/chat.service';
 import { PrismaService } from 'src/prisma.service';
 import { MessageModule } from 'src/message/message.module';
 import { ChatModule } from 'src/chat/chat.module';
+import { UserService } from 'src/user/user.service';
 
 @Module({
-  imports: [MessageModule, ChatModule, MessageModule], 
+  imports: [MessageModule, ChatModule, MessageModule ], 
   controllers: [ UploadController],
-  providers: [UploadService ]
+  providers: [UploadService, UserService, PrismaService ]
 })
 export class UploadModule {}

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, BadRequestException } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 
@@ -26,6 +26,18 @@ export class UserController {
   findUsersByChat(@Param('chatId') chatId: string) {
     return this.userService.findUsersByChatId(+chatId);
   }
+
+  @Patch(':id/avatar')
+  async updateAvatar(
+    @Param('id') id: string,
+    @Body('avatarUrl') avatarUrl: string,
+  ) {
+    if (!avatarUrl) {
+      throw new BadRequestException('avatarUrl is required');
+    }
+    return this.userService.updateAvatar(id, avatarUrl);
+  }
+
 
 
   @Delete(':id')
