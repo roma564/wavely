@@ -30,6 +30,21 @@ export class ModeController {
     return this.modeService.getChatsByMode(+modeId);
   }
 
+  @Get(':id/quick-messages')
+  getQuickMessages(@Param('id') id: string) {
+    return this.modeService.getQuickMessages(+id);
+  }
+  
+  @Patch(':id/quick-messages')
+  updateQuickMessages(
+    @Param('id') id: string,
+    @Body('messages') messages: string[],
+  ) {
+    return this.modeService.updateQuickMessages(+id, messages);
+  }
+
+
+
 
   @Patch(':modeId/set-theme')
   async setTheme(
@@ -38,6 +53,8 @@ export class ModeController {
   ) {
     return this.modeService.setTheme(+modeId, dto.theme);
   }
+
+  
 
 
 

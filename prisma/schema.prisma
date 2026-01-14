@@ -95,6 +95,7 @@ model Mode {
   scheduledCallMode   Boolean
   stickers            Boolean
   restrictedSmileMode Boolean
+  quickMessages       String[]
 
   userId              Int
   user                User       @relation(fields: [userId], references: [id])

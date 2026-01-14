@@ -44,13 +44,38 @@ export class ModeService {
     });
   }
 
+  async getQuickMessages(modeId: number) {
+    return this.prisma.mode.findUnique({
+      where: { id: modeId },
+      select: { quickMessages: true },
+    });
+  }
+
+  async updateQuickMessages(modeId: number, messages: string[]) {
+    return this.prisma.mode.update({
+      where: { id: modeId },
+      data: {
+        quickMessages: {
+          push: messages, // додає нові елементи до існуючого масиву
+        },
+      },
+      select: { quickMessages: true },
+    });
+  }
 
 
-async setTheme(modeId: number, theme: ThemeName) {
-  return this.prisma.mode.update({
-    where: { id: modeId },
-    data: { theme }, 
-  });
+
+
+
+  async setTheme(modeId: number, theme: ThemeName) {
+    return this.prisma.mode.update({
+      where: { id: modeId },
+      data: { theme }, 
+    });
+
+
+  
+  
 }
 
 

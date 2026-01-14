@@ -1,4 +1,4 @@
-import { IsBoolean, IsEnum, IsInt, IsString } from 'class-validator'
+import { IsBoolean, IsEnum, IsInt, IsOptional, IsString } from 'class-validator'
 import { ThemeName } from '@prisma/client'
 
 export class CreateModeDto {
@@ -19,4 +19,8 @@ export class CreateModeDto {
 
   @IsInt()
   userId: number
+
+  @IsOptional()
+  @IsString({ each: true })
+  quickMessages?: string[]
 }
